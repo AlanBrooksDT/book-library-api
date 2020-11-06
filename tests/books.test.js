@@ -29,6 +29,30 @@ describe('/books', () => {
             });
         });
     });
+    describe('POST /books', () => {
+        it('returns validation error if title field is left empty', async () => {
+            const response = await request(app).post('/books').send({});
+            const newBookRecord = await Book.findByPk(response.body.id, {
+                raw: true,
+            });
+
+            expect(response.status).to.equal(400);
+            expect(response.body.errors.length).to.equal(2);
+            expect(newBookRecord).to.equal(null);
+        });
+    });
+    describe('POST /books', () => {
+        it('returns validation error if author field is left empty', async () => {
+            const response = await request(app).post('/books').send({});
+            const newBookRecord = await Book.findByPk(response.body.id, {
+                raw: true,
+            });
+
+            expect(response.status).to.equal(400);
+            expect(response.body.errors.length).to.equal(2);
+            expect(newBookRecord).to.equal(null);
+        });
+    });
 });
 
 describe('with records in the database', () => {

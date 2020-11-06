@@ -11,8 +11,12 @@ const createBooks = (req, res) => {
 
     Book
         .create(newBook)
-        .then(newBookCreated => res.status(201).json(newBookCreated));
-}
+        .then(newBookCreated => res.status(201).json(newBookCreated))
+        .catch((error) => {
+            const errorMessages = error.errors.map((errors) => errors.message); //put all received errors into an array of error message
+            return res.status(400).json({ errors: errorMessages });
+        });
+};
 
 const getBookByID = (req, res) => {
     Book.findByPk(req.params.bookId).then(book => {

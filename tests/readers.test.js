@@ -13,7 +13,7 @@ describe('/readers', () => {
         const response = await request(app).post('/readers').send({
           name: 'Elizabeth Bennet',
           email: 'future_ms_darcy@gmail.com',
-          password: 'testing'
+          password: 'testing89'
         });
         const newReaderRecord = await Reader.findByPk(response.body.id, {
           raw: true,
@@ -21,10 +21,52 @@ describe('/readers', () => {
 
         expect(response.status).to.equal(201);
         expect(response.body.name).to.equal('Elizabeth Bennet');
-        expect(response.body.password).to.equal('testing');
+        expect(response.body.password).to.equal('testing89');
         expect(newReaderRecord.name).to.equal('Elizabeth Bennet');
         expect(newReaderRecord.email).to.equal('future_ms_darcy@gmail.com');
-        expect(newReaderRecord.password).to.equal('testing');
+        expect(newReaderRecord.password).to.equal('testing89');
+      });
+    });
+    describe('POST /readers', () => {
+      it('returns validation error if name field is left empty', async () => {
+        const response = await request(app).post('/readers').send({});
+        const newReaderRecord = await Reader.findByPk(response.body.id, {
+          raw: true,
+        });
+
+        expect(response.status).to.equal(400);
+        expect(response.body.errors.length).to.equal(3);
+        expect(newReaderRecord).to.equal(null);
+      });
+    });
+    describe('POST /readers', () => {
+      it('returns error if email is not valid', async () => {
+        const response = await request(app).post('/readers').send({
+          name: 'David Davidson',
+          email: 'thisisnotanemail',
+          password: 'testing89'
+        });
+        const newReaderRecord = await Reader.findByPk(response.body.id, {
+          raw: true,
+        });
+
+        expect(response.status).to.equal(400);
+        expect(newReaderRecord).to.equal(null);
+      });
+    });
+    describe('POST /readers', () => {
+      it('returns an error if password is less than 9 characters', async () => {
+        const response = await request(app).post('/readers').send({
+          name: 'David Davidson',
+          email: 'david@live.co.uk',
+          password: '12345678'
+        });
+        const newReaderRecord = await Reader.findByPk(response.body.id, {
+          raw: true,
+        });
+
+        expect(response.status).to.equal(400);
+        expect(newReaderRecord).to.equal(null);
       });
     });
   });
@@ -39,10 +81,10 @@ describe('/readers', () => {
         Reader.create({
           name: 'Elizabeth Bennet',
           email: 'future_ms_darcy@gmail.com',
-          password: 'testing',
+          password: 'testing89',
         }),
-        Reader.create({ name: 'Arya Stark', email: 'vmorgul@me.com', password: 'AryaTest' }),
-        Reader.create({ name: 'Lyra Belacqua', email: 'darknorth123@msn.org', password: 'LyraTest' }),
+        Reader.create({ name: 'Arya Stark', email: 'vmorgul@me.com', password: 'AryaTest9' }),
+        Reader.create({ name: 'Lyra Belacqua', email: 'darknorth123@msn.org', password: 'LyraTest9' }),
       ]);
     });
 
