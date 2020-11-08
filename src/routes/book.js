@@ -9,9 +9,9 @@ router
     .post(bookController.createBooks);
 
 router
-    .route('/:bookId')
+    .route('/:id')
     .get(bookController.getBookByID)
-    .patch(bookController.updateBookByID)
+    .patch(bookController.updateBook)
     .delete(bookController.deleteByID)
 
 
